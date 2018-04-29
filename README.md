@@ -1,6 +1,22 @@
 # Password Strength Calculator
 
-[TODO. There will be project description]
+This cript check your password for complexity.
+in this repo also lies password_blacklist.txt - it is 20 the most popular passwords
+
+# How is it works
+
+```python
+C:\Users\svobodinang\Desktop\Python\6_password_strength>python password_strength.py
+Укажите свою фамилию: Свободина
+Имя: Надежда
+Отчество(при наличии): Геннадьевна
+Введите называние компании, в которой работаете(при наличии):
+Введите пароль: 12345ghjy
+Сложность вашего пароль:  7
+Испульзуйте буквы разного регистра
+Используйте различные знаки, например: ^, &, #
+Не указывайте даты в пароле
+```
 
 # Project Goals
 
