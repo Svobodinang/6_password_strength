@@ -1,7 +1,8 @@
 import calendar
-from checks_password import upper_and_lower_letters, \
-                            one_or_more_numerical_digits, \
-                            special_characters, \
+from checks_password import short_password, \
+                            have_just_upper_or_just_lower_letters, \
+                            dont_have_numerical_digits, \
+                            dont_have_special_characters, \
                             in_black_list, \
                             have_personal_information, \
                             have_abbreviation, \
@@ -27,85 +28,51 @@ def input_personal_data():
 def get_password_strength(password, personal_data):
     complexity = 0
     error_list = []
-    last_name, name, patronymic, company_name = personal_data
-    if upper_and_lower_letters(password):
-        complexity += 1
-    else:
-        error = 1
-        error_list.append(error)
-    if one_or_more_numerical_digits(password):
-        complexity += 1
-    else:
-        error = 2
-        error_list.append(error)
-    if special_characters(password):
-        complexity += 1
-    else:
-        error = 3
-        error_list.append(error)
-    if not in_black_list(password, "password_blacklist.txt"):
-        complexity += 1
-    else:
-        error = 4
-        error_list.append(error)
+    last_name, first_name, patronymic, company_name = personal_data
     personal_information_present, company_name_present = \
         have_personal_information(password, personal_data)
-    if not personal_information_present:
-        complexity += 1
-    else:
-        error = 5
-        error_list.append(error)
-    if not company_name_present:
-        complexity += 1
-    else:
-        error = 6
-        error_list.append(error)
-    if not have_abbreviation(password, last_name, name, patronymic):
-        complexity += 1
-    else:
-        error = 7
-        error_list.append(error)
-    if not have_a_date_in_password(password):
-        complexity += 1
-    else:
-        error = 8
-        error_list.append(error)
-    if not have_a_telephone_number(password):
-        complexity += 1
-    else:
-        error = 9
-        error_list.append(error)
-    if not have_license_plate_numbers(password):
-        complexity += 1
-    else:
-        error = 10
-        error_list.append(error)
+
+    all_checks_password = [short_password(password),
+                           have_just_upper_or_just_lower_letters(password),
+                           dont_have_numerical_digits(password),
+                           dont_have_special_characters(password),
+                           in_black_list(password, "password_blacklist.txt"),
+                           personal_information_present,
+                           company_name_present,
+                           have_abbreviation(password,
+                                             last_name,
+                                             first_name,
+                                             patronymic),
+                           have_a_date_in_password(password),
+                           have_a_telephone_number(password),
+                           have_license_plate_numbers(password)]
+    index = 0
+    for check_password in all_checks_password:
+        if not check_password:
+            complexity += 1
+        else:
+            error_list.append(index)
+        index += 1
     return complexity, error_list
 
 
 def output_complexity(complexity, error_list):
     print("Сложность вашего пароль: ", complexity)
-    for error in error_list:
-        if error == 1:
-            print("Испульзуйте буквы разного регистра")
-        if error == 2:
-            print("Используйте не только буквы, но и цифры")
-        if error == 3:
-            print("Используйте различные знаки, например: ^, &, #")
-        if error == 4:
-            print("Используйте менее распространенные пароли")
-        if error == 5:
-            print("Не используйте в пароле свою персональную информацию")
-        if error == 6:
-            print("Не используйте название компании в пароле")
-        if error == 7:
-            print("Не используйте аббревиатуру в пароле")
-        if error == 8:
-            print("Не указывайте даты в пароле")
-        if error == 9:
-            print("Не используйте номера телефонов в пароле")
-        if error == 10:
-            print("Не используйте номерные знаки в пароле")
+    names_error = ["Пароль должен состоять более чем из 8 символов",
+                   "Испульзуйте буквы разного регистра",
+                   "Используйте не только буквы, но и цифры",
+                   "Используйте различные знаки, например: ^, &, #",
+                   "Используйте менее распространенные пароли",
+                   "Не используйте в пароле свою персональную информацию",
+                   "Не используйте название компании в пароле",
+                   "Не используйте аббревиатуру в пароле",
+                   "Не указывайте даты в пароле",
+                   "Не используйте номера телефонов в пароле",
+                   "Не используйте номерные знаки в пароле"]
+    for index in range(10):
+        for error in error_list:
+            if index == error:
+                print(names_error[index])
 
 
 if __name__ == '__main__':

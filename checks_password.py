@@ -1,9 +1,17 @@
 from datetime import datetime
 
 
-def upper_and_lower_letters(password):
+def short_password(password):
+    bad_password = True
+    if len(password) > 8:
+        bad_password = False
+    return bad_password
+
+
+def have_just_upper_or_just_lower_letters(password):
     lower = False
     upper = False
+    bad_password = True
     for letter in password:
         if letter.islower() and not lower:
             lower = True
@@ -11,25 +19,27 @@ def upper_and_lower_letters(password):
             upper = True
 
     if lower and upper:
-        return True
+        bad_password = False
+    return bad_password
 
 
-def one_or_more_numerical_digits(password):
-    digit = False
+def dont_have_numerical_digits(password):
+    bad_password = True
     for letter in password:
         if letter.isdigit():
-            digit = True
+            bad_password = False
             break
-    return digit
+
+    return bad_password
 
 
-def special_characters(password):
-    special_characters = False
+def dont_have_special_characters(password):
+    bad_password = True
     for letter in password:
         if not letter.isdigit() and not letter.isalpha():
-            special_characters = True
+            bad_password = False
             break
-    return special_characters
+    return bad_password
 
 
 def in_black_list(password, filepath):
@@ -44,28 +54,28 @@ def in_black_list(password, filepath):
 
 
 def have_personal_information(password, personal_data):
-    last_name, name, patronymic, company_name = personal_data
+    last_name, first_name, patronymic, company_name = personal_data
     have_personal_information = False
     have_company_name = False
     if (password.find(last_name) != -1) or \
-       (password.find(name) != -1) or \
+       (password.find(first_name) != -1) or \
        (password.find(patronymic) != -1):
         have_personal_information = True
-    if password.find(company_name) != -1 and company_name != "":
+    if (password.find(company_name) != -1) and (company_name != ""):
         have_company_name = True
     return have_personal_information, have_company_name
 
 
-def get_abbreviation(last_name, name, patronymic):
+def get_abbreviation(last_name, first_name, patronymic):
     if patronymic != "":
-        abbreviation = last_name[0] + name[0] + patronymic[0]
+        abbreviation = last_name[0] + first_name[0] + patronymic[0]
     else:
-        abbreviation = last_name[0] + name[0]
+        abbreviation = last_name[0] + first_name[0]
     return abbreviation
 
 
-def have_abbreviation(password, last_name, name, patronymic):
-    abbreviation = get_abbreviation(last_name, name, patronymic)
+def have_abbreviation(password, last_name, first_name, patronymic):
+    abbreviation = get_abbreviation(last_name, first_name, patronymic)
     have_abbreviation = False
     if password.find(abbreviation) != -1:
         have_abbreviation = True
