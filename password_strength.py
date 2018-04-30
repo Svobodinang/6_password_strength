@@ -18,11 +18,11 @@ def input_password():
 
 def input_personal_data():
     last_name = input("Укажите свою фамилию: ")
-    name = input("Имя: ")
+    first_name = input("Имя: ")
     patronymic = input("Отчество(при наличии): ")
     company = input("Введите называние компании, %s" %
                     "в которой работаете(при наличии): ")
-    return last_name, name, patronymic, company
+    return last_name, first_name, patronymic, company
 
 
 def get_password_strength(password, personal_data):
