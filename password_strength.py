@@ -43,7 +43,7 @@ def get_password_strength(password, personal_data):
         personal_information_present,
         company_name_present,
         has_not_abbreviation(
-        	password,
+            password,
             last_name,
             first_name,
             patronymic,

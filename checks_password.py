@@ -26,7 +26,7 @@ def has_numerical_digits(password):
         if letter.isdigit():
             have_digit = True
             break
-    
+
     good_password = bool(have_digit)
 
     return good_password
@@ -35,6 +35,7 @@ def has_numerical_digits(password):
 def has_special_characters(password):
     good_password = not bool(password.isalnum())
     return good_password
+
 
 def load_data(filepath):
     with open(filepath) as file:
