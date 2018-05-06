@@ -1,6 +1,7 @@
 import calendar
 import sys
 import getpass
+import os
 from checks_password import (enough_password_length,
                              has_upper_and_lower_letters,
                              has_numerical_digits,
@@ -84,12 +85,18 @@ def output_complexity(complexity, error_list):
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         exit("Вы не ввели путь к файлу с самыми полпулярными паролями")
-    last_name, first_name, patronymic, company_name = user_input_personal_data()
+    file_path = sys.argv[1]
+    if not os.path.isfile(file_path):
+        exit("Такого файла не существует")
+
+    last_name, first_name, patronymic, company_name = \
+        user_input_personal_data()
     if not last_name or not first_name:
         exit("Вы ввели не все персональные данные")
     password = user_input_password()
     if password == "":
         exit("Вы не ввели пароль")
     personal_data = last_name, first_name, patronymic, company_name
-    complexity, error_list = get_password_strength(password, personal_data, sys.argv[1])
+    complexity, error_list = \
+        get_password_strength(password, personal_data, file_path)
     output_complexity(complexity, error_list)

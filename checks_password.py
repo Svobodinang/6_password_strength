@@ -19,6 +19,7 @@ def has_numerical_digits(password):
     has_digit = any([digit.isdigit() for digit in password])
     return has_digit
 
+
 def has_special_characters(password):
     good_password = not bool(password.isalnum())
     return good_password
@@ -51,18 +52,18 @@ def has_not_personal_information(password, personal_data):
 def get_abbreviation(last_name, first_name, patronymic):
     first_symbol = 0
     if patronymic != "":
-        abbreviation = (last_name[first_symbol] +
-                       first_name[first_symbol] +
-                       patronymic[first_symbol])
+        abbreviation = last_name[first_symbol] + \
+                       first_name[first_symbol] + \
+                       patronymic[first_symbol]
     else:
-        abbreviation = (last_name[first_symbol] +
-                       first_name[first_symbol])
+        abbreviation = last_name[first_symbol] + \
+                       first_name[first_symbol]
     return abbreviation
 
 
 def has_not_abbreviation(password, last_name, first_name, patronymic):
     abbreviation = get_abbreviation(last_name, first_name, patronymic)
-    has_not_abbreviation = not abbreviation in password
+    has_not_abbreviation = abbreviation not in password
     return has_not_abbreviation
 
 
@@ -109,14 +110,14 @@ def has_not_a_telephone_number(password):
     first_symbol = 0
 
     if len(digit_list) == string_length_one:
-        if (digit_list[first_symbol] == first_digit_one or
-            digit_list[first_symbol] == first_digit_two):
+        if digit_list[first_symbol] == first_digit_one or \
+           digit_list[first_symbol] == first_digit_two:
             has_not_a_phone = False
 
-    if (len(digit_list) == string_length_two or
-        len(digit_list) == string_length_three):
-        if (digit_list[first_symbol] != bad_first_digit_one and
-            digit_list[first_symbol] != bad_first_digit_two):
+    if len(digit_list) == string_length_two or \
+       len(digit_list) == string_length_three:
+        if digit_list[first_symbol] != bad_first_digit_one and \
+           digit_list[first_symbol] != bad_first_digit_two:
             has_not_a_phone = False
     return has_not_a_phone
 
