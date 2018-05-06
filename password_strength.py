@@ -1,16 +1,16 @@
 import calendar
 import sys
 import getpass
-from checks_password import dont_short_password, \
-                            has_upper_and_lower_letters, \
-                            has_numerical_digits, \
-                            has_special_characters, \
-                            has_not_in_black_list, \
-                            has_not_personal_information, \
-                            has_not_abbreviation, \
-                            has_not_a_date_in_password, \
-                            has_not_a_telephone_number, \
-                            has_not_license_plate_numbers
+from checks_password import (enough_password_length,
+                             has_upper_and_lower_letters,
+                             has_numerical_digits,
+                             has_special_characters,
+                             is_not_in_black_list,
+                             has_not_personal_information,
+                             has_not_abbreviation,
+                             has_not_date_in_password,
+                             has_not_a_telephone_number,
+                             has_not_license_plate_numbers)
 
 
 def user_input_password():
@@ -27,7 +27,7 @@ def user_input_personal_data():
     return last_name, first_name, patronymic, company
 
 
-def get_password_strength(password, personal_data):
+def get_password_strength(password, personal_data, filepath):
     complexity = 0
     error_list = []
     last_name, first_name, patronymic, company_name = personal_data
@@ -35,30 +35,28 @@ def get_password_strength(password, personal_data):
         has_not_personal_information(password, personal_data)
 
     all_checks_password = [
-        dont_short_password(password),
-        has_upper_and_lower_letters(password),
-        has_numerical_digits(password),
-        has_special_characters(password),
-        has_not_in_black_list(password, sys.argv[1]),
-        personal_information_present,
-        company_name_present,
-        has_not_abbreviation(
+        (enough_password_length(password), 0),
+        (has_upper_and_lower_letters(password), 1),
+        (has_numerical_digits(password), 2),
+        (has_special_characters(password), 3),
+        (is_not_in_black_list(password, filepath), 4),
+        (personal_information_present, 5),
+        (company_name_present, 6),
+        (has_not_abbreviation(
             password,
             last_name,
             first_name,
             patronymic,
-        ),
-        has_not_a_date_in_password(password),
-        has_not_a_telephone_number(password),
-        has_not_license_plate_numbers(password),
+        ), 7),
+        (has_not_date_in_password(password), 8),
+        (has_not_a_telephone_number(password), 9),
+        (has_not_license_plate_numbers(password), 10),
     ]
-    index = 0
-    for check_password in all_checks_password:
-        if check_password:
+    for check, error in all_checks_password:
+        if check:
             complexity += 1
         else:
-            error_list.append(index)
-        index += 1
+            error_list.append(error)
     return complexity, error_list
 
 
@@ -86,13 +84,12 @@ def output_complexity(complexity, error_list):
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         exit("Вы не ввели путь к файлу с самыми полпулярными паролями")
-    personal_data = user_input_personal_data()
-    last_name = 0
-    first_name = 1
-    if personal_data[last_name] == "" or personal_data[first_name] == "":
+    last_name, first_name, patronymic, company_name = user_input_personal_data()
+    if not last_name or not first_name:
         exit("Вы ввели не все персональные данные")
     password = user_input_password()
     if password == "":
         exit("Вы не ввели пароль")
-    complexity, error_list = get_password_strength(password, personal_data)
+    personal_data = last_name, first_name, patronymic, company_name
+    complexity, error_list = get_password_strength(password, personal_data, sys.argv[1])
     output_complexity(complexity, error_list)
