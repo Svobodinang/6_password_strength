@@ -11,8 +11,7 @@ def enough_password_length(password):
 def has_upper_and_lower_letters(password):
     lower = any([char.islower() for char in password])
     upper = any([char.isupper() for char in password])
-    good_password = not bool(not lower or not upper)
-    return good_password
+    return lower and upper
 
 
 def has_numerical_digits(password):
@@ -21,8 +20,7 @@ def has_numerical_digits(password):
 
 
 def has_special_characters(password):
-    good_password = not bool(password.isalnum())
-    return good_password
+    return not password.isalnum()
 
 
 def load_blacklist(filepath):
@@ -32,8 +30,8 @@ def load_blacklist(filepath):
     return readed_black_list
 
 
-def is_not_in_black_list(password, filepath):
-    return not (password in load_blacklist(filepath))
+def is_not_in_black_list(password, black_list):
+    return password not in black_list
 
 
 def has_not_personal_information(password, personal_data):
@@ -52,12 +50,16 @@ def has_not_personal_information(password, personal_data):
 def get_abbreviation(last_name, first_name, patronymic):
     first_symbol = 0
     if patronymic != "":
-        abbreviation = last_name[first_symbol] + \
-                       first_name[first_symbol] + \
-                       patronymic[first_symbol]
+        abbreviation = (
+            last_name[first_symbol] +
+            first_name[first_symbol] +
+            patronymic[first_symbol]
+        )
     else:
-        abbreviation = last_name[first_symbol] + \
-                       first_name[first_symbol]
+        abbreviation = (
+            last_name[first_symbol] +
+            first_name[first_symbol]
+        )
     return abbreviation
 
 
@@ -125,8 +127,8 @@ def has_not_a_telephone_number(password):
 def has_not_license_plate_numbers(password):
     plase_number = ""
     has_not_plate_number = True
-    regular_expression_one = r"[a-z]{1}\d\d\d[a-z]{1}[a-z]{1}"
-    regular_expression_two = r"[A-Z]{1}\d\d\d[A-Z]{1}[A-Z]{1}"
+    regular_expression_one = r"[a-z]\d{3}[a-z]{2}"
+    regular_expression_two = r"[A-Z]\d{3}[A-Z]{2}"
     find_plate_one = re.search(regular_expression_one, password)
     find_plate_two = re.search(regular_expression_two, password)
     if find_plate_one or find_plate_two:

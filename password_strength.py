@@ -2,16 +2,19 @@ import calendar
 import sys
 import getpass
 import os
-from checks_password import (enough_password_length,
-                             has_upper_and_lower_letters,
-                             has_numerical_digits,
-                             has_special_characters,
-                             is_not_in_black_list,
-                             has_not_personal_information,
-                             has_not_abbreviation,
-                             has_not_date_in_password,
-                             has_not_a_telephone_number,
-                             has_not_license_plate_numbers)
+from checks_password import (
+    enough_password_length,
+    has_upper_and_lower_letters,
+    has_numerical_digits,
+    has_special_characters,
+    is_not_in_black_list,
+    has_not_personal_information,
+    has_not_abbreviation,
+    has_not_date_in_password,
+    has_not_a_telephone_number,
+    has_not_license_plate_numbers,
+    load_blacklist,
+)
 
 
 def user_input_password():
@@ -34,13 +37,14 @@ def get_password_strength(password, personal_data, filepath):
     last_name, first_name, patronymic, company_name = personal_data
     personal_information_present, company_name_present = \
         has_not_personal_information(password, personal_data)
+    black_list = load_blacklist(filepath)
 
     all_checks_password = [
         (enough_password_length(password), 0),
         (has_upper_and_lower_letters(password), 1),
         (has_numerical_digits(password), 2),
         (has_special_characters(password), 3),
-        (is_not_in_black_list(password, filepath), 4),
+        (is_not_in_black_list(password, black_list), 4),
         (personal_information_present, 5),
         (company_name_present, 6),
         (has_not_abbreviation(
