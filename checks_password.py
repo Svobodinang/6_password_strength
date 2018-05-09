@@ -3,7 +3,7 @@ import re
 import string
 
 
-def enough_password_length(password):
+def has_enough_length(password):
     enough_password_length = 8
     return len(password) > enough_password_length
 
@@ -112,14 +112,14 @@ def has_not_a_telephone_number(password):
     first_symbol = 0
 
     if len(digit_list) == string_length_one:
-        if digit_list[first_symbol] == first_digit_one or \
-           digit_list[first_symbol] == first_digit_two:
+        if (digit_list[first_symbol] == first_digit_one or
+           digit_list[first_symbol] == first_digit_two):
             has_not_a_phone = False
 
-    if len(digit_list) == string_length_two or \
-       len(digit_list) == string_length_three:
-        if digit_list[first_symbol] != bad_first_digit_one and \
-           digit_list[first_symbol] != bad_first_digit_two:
+    if (len(digit_list) == string_length_two or
+       len(digit_list) == string_length_three):
+        if (digit_list[first_symbol] != bad_first_digit_one and
+           digit_list[first_symbol] != bad_first_digit_two):
             has_not_a_phone = False
     return has_not_a_phone
 

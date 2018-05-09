@@ -3,7 +3,7 @@ import sys
 import getpass
 import os
 from checks_password import (
-    enough_password_length,
+    has_enough_length,
     has_upper_and_lower_letters,
     has_numerical_digits,
     has_special_characters,
@@ -40,7 +40,7 @@ def get_password_strength(password, personal_data, filepath):
     black_list = load_blacklist(filepath)
 
     all_checks_password = [
-        (enough_password_length(password), 0),
+        (has_enough_length(password), 0),
         (has_upper_and_lower_letters(password), 1),
         (has_numerical_digits(password), 2),
         (has_special_characters(password), 3),
@@ -65,7 +65,7 @@ def get_password_strength(password, personal_data, filepath):
     return complexity, error_list
 
 
-def output_complexity(complexity, error_list):
+def output_complexity(complexity, error_indexes_list):
     print("Сложность вашего пароль: ", complexity)
     names_error = [
         "Пароль должен состоять более чем из 8 символов",
@@ -80,10 +80,8 @@ def output_complexity(complexity, error_list):
         "Не используйте номера телефонов в пароле",
         "Не используйте номерные знаки в пароле",
     ]
-    for index in range(11):
-        for error in error_list:
-            if index == error:
-                print(names_error[index])
+    for index in error_indexes_list:
+        print(names_error[index])
 
 
 if __name__ == "__main__":
